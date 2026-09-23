@@ -1,0 +1,124 @@
+{ config, pkgs, inputs, ... }:
+{
+  home.username = "d3rhund";
+  home.homeDirectory = "/home/d3rhund";
+  home.stateVersion = "25.05"; # no cambiar tras la primera instalación
+
+  ######################################################################
+  ## Paquetes personales (apps de usuario, no de sistema)
+  ######################################################################
+  home.packages = with pkgs; [
+    fastfetch
+    discord
+    spotify
+    vscodium
+    gh
+    cowsay
+    steam
+    protonup-qt
+    gparted
+    btop
+    appimage-run
+    netbird-ui
+    ryubing
+    starship
+    nwg-look
+    cmatrix
+    inputs.zen-browser.packages.${pkgs.system}.default
+  ];
+
+  ######################################################################
+  ## Cursor shits
+  ######################################################################
+  home.pointerCursor = {
+  enable = true;
+  name = "Adwaita";
+  package = pkgs.adwaita-icon-theme;
+  size = 6;                   
+  gtk.enable = true;            
+  x11.enable = true;            
+};
+
+  ######################################################################
+  ## Shell
+  ######################################################################
+  programs.bash = {
+    enable = true;
+    initExtra = ''
+      eval "$(starship init bash)"
+      fastfetch
+    '';
+    shellAliases = {
+      rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+      edit-h = "sudo nano /etc/nixos/home.nix";
+      edit-c = "sudo nano /etc/nixos/configuration.nix";
+    };
+  };
+
+  ######################################################################
+  ## Home Manager se gestiona a sí mismo
+  ######################################################################
+  programs.home-manager.enable = true;
+}
+{ config, pkgs, inputs, ... }:
+{
+  home.username = "d3rhund";
+  home.homeDirectory = "/home/d3rhund";
+  home.stateVersion = "25.05"; # no cambiar tras la primera instalación
+
+  ######################################################################
+  ## Paquetes personales (apps de usuario, no de sistema)
+  ######################################################################
+  home.packages = with pkgs; [
+    fastfetch
+    discord
+    spotify
+    vscodium
+    gh
+    cowsay
+    steam
+    protonup-qt
+    gparted
+    btop
+    appimage-run
+    netbird-ui
+    ryubing
+    starship
+    nwg-look
+    cmatrix
+    inputs.zen-browser.packages.${pkgs.system}.default
+  ];
+
+  ######################################################################
+  ## Cursor shits
+  ######################################################################
+  home.pointerCursor = {
+  enable = true;
+  name = "Adwaita";
+  package = pkgs.adwaita-icon-theme;
+  size = 6;                   
+  gtk.enable = true;            
+  x11.enable = true;            
+};
+
+  ######################################################################
+  ## Shell
+  ######################################################################
+  programs.bash = {
+    enable = true;
+    initExtra = ''
+      eval "$(starship init bash)"
+      fastfetch
+    '';
+    shellAliases = {
+      rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+      edit-h = "sudo nano /etc/nixos/home.nix";
+      edit-c = "sudo nano /etc/nixos/configuration.nix";
+    };
+  };
+
+  ######################################################################
+  ## Home Manager se gestiona a sí mismo
+  ######################################################################
+  programs.home-manager.enable = true;
+}

@@ -1,0 +1,230 @@
+{ config, pkgs, lib, inputs, ... }:
+
+{
+  imports = [
+    ./hardware-configuration.nix
+  ];
+
+  ####################################################################
+  ## Boot / kernel
+  ####################################################################
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/nvme0n1";
+  boot.loader.grub.useOSProber = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  ####################################################################
+  ## Optimización de apagado / reinicio
+  ####################################################################
+  systemd.settings.Manager = {
+    DefaultTimeoutStopSec = "10s";
+  };
+
+  systemd.user.settings.Manager = {
+    DefaultTimeoutStopSec = "10s";
+  };
+
+  ####################################################################
+  ## CPU boost y Swap
+  ####################################################################
+  powerManagement.cpuFreqGovernor = "performance";
+  zramSwap.enable = true;
+  boot.kernelParams = [
+    "reboot=pci"      # Si este no funciona tras probar, cambia por "reboot=acpi" o "reboot=efi"
+    "nowatchdog"      # Desactiva el watchdog de hardware que aparecía activo en tu log anterior
+  ];
+  zramSwap.memoryPercent = 50;
+  
+  ####################################################################
+  ## Red
+  ####################################################################
+  networking.hostName = "nixos";
+  networking.networkmanager.enable = true;
+
+  ####################################################################
+  ## Nix / Flakes
+  ####################################################################
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nixpkgs.config.allowUnfree = true;
+
+  ####################################################################
+  ## Disco extra
+  ####################################################################
+  fileSystems."/mnt/datos" = {
+  device = "/dev/disk/by-uuid/TU-UUID-AQUI";
+  fsType = "ext4"; # Cambia esto según el formato de tu disco (ext4, ntfs, exfat, btrfs, etc.)
+  options = [ "defaults" "nofail" ]; # "nofail" evita que el sistema falle al arrancar si el disco no está conectado
+};
+ 
+  ####################################################################
+  ## Fuentes
+  ####################################################################  
+  fonts.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+  ];
+
+  ####################################################################
+  ## Flatpak
+  ####################################################################
+  services.flatpak.enable = true;
+
+  ####################################################################
+  ## Portales y MIME
+  ####################################################################
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-gnome ];
+    config.common.default = [ "gtk" ];
+    config.niri.default = lib.mkForce [ "gtk" ];
+  };
+
+  xdg.mime.enable = true;
+  xdg.mime.defaultApplications = {
+    "inode/directory" = "nemo.desktop";
+  };
+
+  ####################################################################
+  ## Gráficos / Gaming
+  ####################################################################
+  hardware.graphics.enable = true;
+  hardware.bluetooth.enable = true;
+  hardware.graphics.enable32Bit = true;
+  hardware.steam-hardware.enable = true;
+
+  ####################################################################
+  ## Appimage
+  ####################################################################
+  boot.binfmt.registrations.appimage = {
+    wrapInterpreterInShell = false;
+    interpreter = "${pkgs.appimage-run}/bin/appimage-run";
+    recognitionType = "magic";
+    offset = 0;
+    mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
+    magicOrExtension = ''\x7fELF....AI\x02'';
+  };
+
+  ####################################################################
+  ## Localización
+  ####################################################################
+  time.timeZone = "Europe/Madrid";
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "es_ES.UTF-8";
+    LC_IDENTIFICATION = "es_ES.UTF-8";
+    LC_MEASUREMENT = "es_ES.UTF-8";
+    LC_MONETARY = "es_ES.UTF-8";
+    LC_NAME = "es_ES.UTF-8";
+    LC_NUMERIC = "es_ES.UTF-8";
+    LC_PAPER = "es_ES.UTF-8";
+    LC_TELEPHONE = "es_ES.UTF-8";
+    LC_TIME = "es_ES.UTF-8";
+  };
+
+  ####################################################################
+  ## Entorno gráfico: Display Manager y Niri
+  ####################################################################
+  services.xserver.enable = true;
+
+  # sysc-greet gestiona su propio servicio sobre greetd
+  services.sysc-greet = {
+    enable = true;
+    compositor = "niri";
+  };
+
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
+
+  # Habilitar soporte de Niri en el sistema
+  programs.niri.enable = true;
+
+  ####################################################################
+  ## GPU: NVIDIA y Wayland
+  ####################################################################
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia = {
+    branch = "legacy_580";
+    open = false;
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    nvidiaSettings = true;
+  };
+
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    GBM_BACKEND = "nvidia-drm";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    WLR_NO_HARDWARE_CURSORS = "1";
+  };
+
+  ####################################################################
+  ## Steam
+  ####################################################################
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    localNetworkGameTransfers.openFirewall = true;
+  };
+
+  ####################################################################
+  ## Audio: Pipewire
+  ####################################################################
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
+  ####################################################################
+  ## Impresión
+  ####################################################################
+  services.printing.enable = true;
+
+  ####################################################################
+  ## Virtualización
+  ####################################################################
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      runAsRoot = true;
+      swtpm.enable = true;
+    };
+  };
+  programs.virt-manager.enable = true;
+
+  ####################################################################
+  ## Usuarios
+  ####################################################################
+users.users."d3rhund" = {
+    isNormalUser = true;
+    description = "d3rhund";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
+  };
+
+  ####################################################################
+  ## Programas y paquetes del sistema
+  ####################################################################
+  programs.firefox.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    vim
+    wget
+    thunar-archive-plugin
+    file-roller
+    wtype
+    ghostty
+    foot
+    unrar
+    appimage-run
+    git
+  ];
+
+  system.stateVersion = "26.05";
+}

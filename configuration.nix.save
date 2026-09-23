@@ -1,0 +1,210 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running 'nixos-help').
+
+{ config, pkgs, lib, inputs, ... }:
+
+{
+  imports = [
+    ./hardware-configuration.nix
+  ];
+
+  ####################################################################
+  ## Boot / kernel
+  ####################################################################
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/nvme0n1";
+  boot.loader.grub.useOSProber = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  ####################################################################
+  # cpu boost
+  ####################################################################
+  powerManagement.cpuFreqGovernor = "performance";
+  
+  ####################################################################
+  # swap
+  ####################################################################
+  zramSwap.enable = true;
+  zramSwap.memoryPercent = 50;
+
+  ####################################################################
+  ## Red
+  ####################################################################
+  networking.hostName = "nixos";
+  networking.networkmanager.enable = true;
+  # networking.wireless.enable = true;  # Alternativa a NetworkManager
+
+  ####################################################################
+  ## Nix / Flakes
+  ####################################################################
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nixpkgs.config.allowUnfree = true;
+
+  ####################################################################
+  ## disco extra
+  ####################################################################
+  fileSystems."/mnt/datos" = {
+  device = "/dev/disk/by-uuid/016066c8-4e10-41db-a5c0-273313ce9311";
+  fsType = "ext4";
+};
+  ####################################################################
+  # Sunshine y netbird
+  ####################################################################
+  services.sunshine = {
+  enable = true;
+  autoStart = false;
+  capSysAdmin = true; # Necesario para captura en Wayland (omítelo si usas Xorg)
+  openFirewall = true; # Abre de forma automática los puertos predeterminados
+};
+services.netbird.enable = true;
+
+  ####################################################################
+  # Fuentes de texto
+  ####################################################################  
+  fonts.packages = with pkgs; [
+  nerd-fonts.jetbrains-mono
+];
+
+  ####################################################################
+  # Flatpak shits
+  ####################################################################
+  services.flatpak.enable = true;
+  xdg.portal.enable = true;
+
+  ####################################################################
+  # RPCS3 shits
+  ####################################################################
+  hardware.graphics.enable32Bit = true;
+  hardware.steam-hardware.enable = true;
+
+  ####################################################################
+  # appimage-run
+  ####################################################################
+boot.binfmt.registrations.appimage = {
+  wrapInterpreterInShell = false;
+  interpreter = "${pkgs.appimage-run}/bin/appimage-run";
+  recognitionType = "magic";
+  offset = 0;
+  mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
+  magicOrExtension = ''\x7fELF....AI\x02'';
+};
+
+  ####################################################################
+  ## Localización
+  ####################################################################
+  time.timeZone = "Europe/Madrid";
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "es_ES.UTF-8";
+    LC_IDENTIFICATION = "es_ES.UTF-8";
+    LC_MEASUREMENT = "es_ES.UTF-8";
+    LC_MONETARY = "es_ES.UTF-8";
+    LC_NAME = "es_ES.UTF-8";
+    LC_NUMERIC = "es_ES.UTF-8";
+    LC_PAPER = "es_ES.UTF-8";
+    LC_TELEPHONE = "es_ES.UTF-8";
+    LC_TIME = "es_ES.UTF-8";
+  };
+
+  ####################################################################
+  ## Entorno gráfico: X11 + XFCE (LightDM)&&(SDDM)
+  ####################################################################
+  services.xserver.enable = true;
+  services.xserver.displayManager.lightdm.enable = true;
+  services.xserver.desktopManager.xfce.enable = true;
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
+  # services.xserver.libinput.enable = true; # Touchpad (activado por defecto en la mayoría de DEs)
+
+
+  ####################################################################
+  ## GPU: NVIDIA
+  ####################################################################
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia = {
+    branch = "legacy_580";
+    open = false;
+    modesetting.enable = true;
+    powerManagement.enable = true;
+    nvidiaSettings = true;
+  };
+  ####################################################################
+  ## steam
+  ####################################################################
+  programs.steam = {
+  enable = true;
+  remotePlay.openFirewall = true;
+  dedicatedServer.openFirewall = true;
+  localNetworkGameTransfers.openFirewall = true;
+};
+
+  ####################################################################
+  ## Audio: Pipewire
+  ####################################################################
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # jack.enable = true; # Descomenta si usas apps JACK
+  };
+
+  ####################################################################
+  ## Impresión
+  ####################################################################
+  services.printing.enable = true;
+
+  ####################################################################
+  ## Virtualización: QEMU/KVM + virt-manager
+  ####################################################################
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      runAsRoot = true;
+      swtpm.enable = true;
+    };
+  };
+  programs.virt-manager.enable = true; # necesita polkit para gestionar VMs sin sudo
+
+  ####################################################################
+  ## Usuarios del sistema
+  ####################################################################
+  users.users."d3rhund" = {
+    isNormalUser = true;
+    description = "d3rhund";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
+  };
+
+  ####################################################################
+  ## Programas de sistema
+  ####################################################################
+  programs.firefox.enable = true;
+
+  ####################################################################
+  ## Paquetes de sistema (herramientas base, no apps personales)
+  ####################################################################
+  environment.systemPackages = with pkgs; [
+    vim   # editor de respaldo para tocar configuration.nix
+    wget
+    thunar-archive-plugin
+    file-roller
+  ];
+
+  # List services that you want to enable:
+  # services.openssh.enable = true;
+
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # networking.firewall.enable = false;
+
+  ####################################################################
+  ## Versión de estado (no tocar salvo que sepas lo que haces)
+  ####################################################################
+  system.stateVersion = "26.05";
+}
