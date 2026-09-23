@@ -29,6 +29,7 @@
     protontricks
     libnotify
     sox
+    keepassxc
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # Herramientas de compilación
