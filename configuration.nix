@@ -11,7 +11,11 @@
   ];
 
   services.gvfs.enable = true;
+  programs.dwl.enable = true;
+  # Habilitar Zsh
 
+  programs.zsh.enable = true;
+  programs.gpu-screen-recorder.enable = true;
   ####################################################################
   ## Boot / kernel
   ####################################################################
@@ -61,12 +65,6 @@
   ####################################################################
   fileSystems."/mnt/datos" = {
     device = "/dev/disk/by-uuid/e4a4f12b-c873-425a-b293-49a3d60d1b2c";
-    fsType = "ext4";
-    options = [ "defaults" "nofail" ];
-  };
-
-  fileSystems."/mnt/extra" = {
-    device = "/dev/disk/by-uuid/6ba2243d-7673-40d9-b1e6-43d173232933";
     fsType = "ext4";
     options = [ "defaults" "nofail" ];
   };
@@ -144,11 +142,6 @@
   ####################################################################
   services.xserver.enable = true;
 
-  services.sysc-greet = {
-    enable = true;
-    compositor = "niri"; # Configurado para arrancar MangoWM directamente
-  };
-
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -156,6 +149,17 @@
 
   # Habilitar soporte de MangoWM
   programs.mango.enable = true;
+
+  # Gestor de inicio de sesión con tuigreet configurado a Mango
+  services.greetd = {
+  enable = true;
+  settings = {
+    default_session = {
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd mango";
+      user = "greeter";
+    };
+  };
+};
 
   ####################################################################
   ## GPU: NVIDIA y Wayland
@@ -222,6 +226,7 @@
   ####################################################################
   users.users."d3rhund" = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     description = "d3rhund";
     extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
   };

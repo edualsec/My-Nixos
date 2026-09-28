@@ -2,7 +2,6 @@
 {
   description = "NixOS con Noctalia + MangoWM";
 
-  # Cache binaria oficial: te ahorra compilar Noctalia (C++) desde cero
   nixConfig = {
     extra-substituters = [ "https://noctalia.cachix.org" ];
     extra-trusted-public-keys = [
@@ -37,14 +36,13 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, sysc-greet, mangowm, ... }: {
+  outputs = inputs@{ self, nixpkgs, home-manager, mangowm, ... }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix
         ./noctalia.nix
-        sysc-greet.nixosModules.default
 
         home-manager.nixosModules.home-manager
         {
