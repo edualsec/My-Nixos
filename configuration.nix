@@ -6,9 +6,7 @@
     inputs.mangowm.nixosModules.mango
   ];
 
-  nixpkgs.overlays = [
-    (import ./overlays/xwayland-satellite.nix)
-  ];
+ 
 
   services.gvfs.enable = true;
   programs.dwl.enable = true;
