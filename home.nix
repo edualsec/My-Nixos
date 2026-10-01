@@ -3,7 +3,10 @@
   home.username = "d3rhund";
   home.homeDirectory = "/home/d3rhund";
   home.stateVersion = "25.05";
-
+  xdg.configFile."mango".source = ./dotfiles/mango;
+  xdg.configFile."ghostty".source = ./dotfiles/ghostty;
+  xdg.configFile."waybar".source = ./dotfiles/waybar;
+  xdg.configFile."eww".source = ./dotfiles/eww;
   ######################################################################
   ## Paquetes personales y utilidades de escritorio
   ######################################################################

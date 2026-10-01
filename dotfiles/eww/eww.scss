@@ -1,0 +1,227 @@
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+}
+
+.popup-box {
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 16px;
+  color: #ffffff;
+}
+
+.popup-header {
+  font-size: 13px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 4px;
+}
+
+.popup-icon {
+  font-size: 16px;
+  color: #ffffff;
+  min-width: 24px;
+}
+
+.popup-val {
+  font-size: 12px;
+  min-width: 40px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Sliders */
+scale.popup-slider trough {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  min-height: 8px;
+  min-width: 170px;
+}
+
+scale.popup-slider highlight {
+  background-color: #ffffff;
+  border-radius: 6px;
+}
+
+/* Botones de Layout */
+.layout-btn {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px 6px;
+}
+
+.layout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: #ffffff;
+}
+
+.layout-glyph {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.layout-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Wi-Fi */
+.wifi-state-box {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.wifi-ssid {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.wifi-toggle-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: #ffffff;
+}
+
+.wifi-toggle-btn:hover {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Botones de Sistema / Power */
+.power-action-btn {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 14px 10px;
+}
+
+.power-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: #ffffff;
+}
+
+.power-glyph {
+  font-size: 22px;
+  color: #ffffff;
+}
+
+.power-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Historial de Portapapeles */
+.clip-entry {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+}
+
+.clip-entry:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.clip-icon {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.clip-text {
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.clip-clear-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #ffffff;
+}
+
+.clip-clear-btn:hover {
+  background-color: #ea6962;
+  color: #ffffff;
+}
+
+.no-apps-label {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  padding: 6px 0;
+}
+
+.audio-separator {
+  background-color: rgba(255, 255, 255, 0.1);
+  min-height: 1px;
+  margin: 4px 0;
+}
+
+/* Calendario */
+.calendar-widget {
+  padding: 6px;
+  background-color: transparent;
+  color: #ffffff;
+}
+
+.calendar-widget:selected {
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.calendar-widget.header {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: bold;
+  padding-bottom: 4px;
+}
+
+.calendar-widget.button {
+  color: #ffffff;
+}
+
+.calendar-widget.button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.calendar-widget:indeterminate {
+  color: rgba(255, 255, 255, 0.3);
+}
+/* Estado del sistema (CPU / RAM / GPU) */
+.stat-row {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+ 
+.stat-icon { font-size: 16px; color: #ffffff; min-width: 22px; }
+.stat-name { font-size: 12px; font-weight: bold; color: #ffffff; }
+.stat-detail { font-size: 10px; color: rgba(255, 255, 255, 0.5); }
+ 
+.stat-temp { font-size: 12px; font-weight: bold; }
+.stat-temp.cool { color: #ffffff; }
+.stat-temp.warm { color: #d8a657; }
+.stat-temp.hot  { color: #ea6962; }
+.stat-temp.na   { color: rgba(255, 255, 255, 0.35); }
+ 
+/* Barras de porcentaje (cajas normales, no dependen del tema GTK) */
+.stat-track {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  min-height: 8px;
+}
+ 
+.stat-fill {
+  background-color: #ffffff;
+  border-radius: 6px;
+  min-height: 8px;
+}
+ 

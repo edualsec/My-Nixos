@@ -1,0 +1,137 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-top": 8,
+  "margin-left": 14,
+  "margin-right": 14,
+  "height": 38,
+  "spacing": 6,
+
+  "modules-left": [
+    "group/tags",
+    "custom/layout"
+  ],
+
+  "modules-center": [
+    "custom/stats",
+    "clock",
+    "custom/power"
+  ],
+
+  "modules-right": [
+    "custom/record",
+    "custom/screenshot",
+    "custom/swaync",
+    "custom/clipboard",
+    "network",
+    "pulseaudio",
+    "keyboard-state"
+  ],
+
+  // --- Grupo de los 9 tags/escritorios de MangoWM ---
+  "group/tags": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/tag1",
+      "custom/tag2",
+      "custom/tag3",
+      "custom/tag4",
+      "custom/tag5",
+      "custom/tag6",
+      "custom/tag7",
+      "custom/tag8",
+      "custom/tag9"
+    ]
+  },
+
+  "custom/tag1": { "format": "1", "on-click": "mmsg dispatch view,1" },
+  "custom/tag2": { "format": "2", "on-click": "mmsg dispatch view,2" },
+  "custom/tag3": { "format": "3", "on-click": "mmsg dispatch view,3" },
+  "custom/tag4": { "format": "4", "on-click": "mmsg dispatch view,4" },
+  "custom/tag5": { "format": "5", "on-click": "mmsg dispatch view,5" },
+  "custom/tag6": { "format": "6", "on-click": "mmsg dispatch view,6" },
+  "custom/tag7": { "format": "7", "on-click": "mmsg dispatch view,7" },
+  "custom/tag8": { "format": "8", "on-click": "mmsg dispatch view,8" },
+  "custom/tag9": { "format": "9", "on-click": "mmsg dispatch view,9" },
+
+  // Selector gráfico de layouts
+  "custom/layout": {
+    "format": "󱂬",
+    "tooltip-format": "Seleccionar Layout",
+    "on-click": "eww open --toggle layout_popup"
+  },
+
+  // --- Centro ---
+  "clock": {
+    "format": "{:%H:%M}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "on-click": "eww open --toggle calendar_popup"
+  },
+
+     "custom/stats": {
+     "format": "󰾆",
+     "tooltip-format": "Estado del sistema",
+     "on-click": "eww open --toggle stats_popup"
+   },
+
+  // --- Derecha ---
+  "custom/power": {
+    "format": "",
+    "tooltip-format": "Menú de energía",
+    "on-click": "eww open --toggle power_popup"
+  },
+
+"custom/record": {
+    "format": "",
+    "tooltip-format": "Grabar pantalla / región (Clic: iniciar/detener)",
+    "on-click": "~/.config/waybar/scripts/record.sh",
+    "return-type": "json",
+    "exec": "sh -c 'if pgrep -x wf-recorder > /dev/null; then echo \"{\\\"class\\\":\\\"recording\\\",\\\"tooltip\\\":\\\"Grabando... (clic para parar)\\\"}\"; else echo \"{\\\"class\\\":\\\"idle\\\",\\\"tooltip\\\":\\\"Clic para grabar\\\"}\"; fi'",
+    "interval": 2
+  },
+  "custom/screenshot": {
+    "format": "󰹑",
+    "tooltip-format": "Capturar región",
+    "on-click": "sh -c 'grim -g \"$(slurp)\" - | wl-copy'"
+  },
+
+  "custom/swaync": {
+    "format": "",
+    "tooltip-format": "Notificaciones",
+    "on-click": "eww open --toggle notif_popup"
+  },
+
+  // Historial de portapapeles con ventana nativa de Eww
+  "custom/clipboard": {
+    "format": "",
+    "tooltip-format": "Historial de portapapeles",
+    "on-click": "eww open --toggle clip_popup"
+  },
+
+  // Red
+  "network": {
+    "format-ethernet": "󰈀 {ifname}",
+    "format-wifi": " {essid}",
+    "format-disconnected": "󰖪 offline",
+    "tooltip-format": "{ipaddr}",
+    "on-click": "eww open --toggle wifi_popup"
+  },
+
+  // Audio
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟",
+    "format-icons": {
+      "default": ["", "", ""]
+    },
+    "on-click": "eww open --toggle audio_popup",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "scroll-step": 5
+  },
+
+  "keyboard-state": {
+    "numlock": false,
+    "capslock": false,
+    "format": ""
+  }
+}
