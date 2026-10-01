@@ -5,7 +5,7 @@
   home.stateVersion = "25.05";
 
   ######################################################################
-  ## Paquetes personales
+  ## Paquetes personales y utilidades de escritorio
   ######################################################################
   home.packages = with pkgs; [
     fastfetch
@@ -14,14 +14,12 @@
     vscodium
     gh
     cowsay
-    gparted
     btop
     starship
     nwg-look
     cmatrix
     inxi
     cava
-    quickshell
     onlyoffice-desktopeditors
     obsidian
     nemo
@@ -32,25 +30,45 @@
     fetch
     gnome-pomodoro
     jq
-    slurp
     vlc
     fzf
     keepassxc
+    pulseaudio
+    wf-recorder
+    eww
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
-    # Herramientas de compilación
+    # Stack modular para Wayland
+    fuzzel                    # Lanzador de aplicaciones
+    swaynotificationcenter    # Centro de notificaciones (SwayNC)
+    grim                      # Capturas de pantalla
+    slurp                     # Selector de áreas
+    wl-clipboard              # Portapapeles
+    sassc
+    cliphist
+    playerctl
+    pamixer  
+    networkmanager
+                   # Control de audio/multimedia
+
+    # Herramientas de compilación y librerías
     gcc
     gnumake
     pkg-config
     python3
     rustup
+    ffmpeg
     jdk21    
-    # Librerías para Wayland, EGL/GLES y PNG
     wayland
     wayland-protocols
     libGL
     libpng
   ];
+
+  ######################################################################
+  ## Barra de estado modular (Waybar)
+  ######################################################################
+  programs.waybar.enable = true;
 
   ######################################################################
   ## Acciones de Nemo
@@ -88,13 +106,13 @@
   programs.zsh = {
     enable = true;
 
-  autosuggestion.enable = true;
-  syntaxHighlighting.enable = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
 
     # Configuración de Oh My Zsh y sus plugins
     oh-my-zsh = {
       enable = true;
-      theme = ""; # Se deja vacío para que Starship gestione el prompt
+      theme = "";
       plugins = [ 
         "git" 
         "sudo"
@@ -108,8 +126,7 @@
 
     initContent = ''
       eval "$(starship init zsh)"
-     fastfetch
-
+      fastfetch
     '';
 
     shellAliases = {
@@ -120,8 +137,10 @@
       edit-m = "sudo nano /home/$USER/.config/mango/config.conf";
     };
   };
+
   ######################################################################
   ## Home Manager
   ######################################################################
   programs.home-manager.enable = true;
+
 }

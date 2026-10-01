@@ -6,14 +6,11 @@
     inputs.mangowm.nixosModules.mango
   ];
 
- 
-
   services.gvfs.enable = true;
-  programs.dwl.enable = true;
-  # Habilitar Zsh
 
+  # Habilitar Zsh
   programs.zsh.enable = true;
-  programs.gpu-screen-recorder.enable = true;
+
   ####################################################################
   ## Boot / kernel
   ####################################################################
@@ -51,6 +48,7 @@
   ####################################################################
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";
 
   ####################################################################
   ## Nix / Flakes
@@ -80,23 +78,26 @@
   services.flatpak.enable = true;
 
   ####################################################################
-  ## Auto optimizar
-  ####################################################################
-  nix.settings.auto-optimise-store = true;
-
-  ####################################################################
   ## Portales y MIME
   ####################################################################
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-gnome ];
-    config.common.default = [ "gtk" ];
+    extraPortals = [ 
+      pkgs.xdg-desktop-portal-wlr 
+      pkgs.xdg-desktop-portal-gtk 
+    ];
+    config.common.default = [ "wlr" "gtk" ];
   };
 
   xdg.mime.enable = true;
   xdg.mime.defaultApplications = {
     "inode/directory" = "nemo.desktop";
   };
+
+  ####################################################################
+  ## Seguridad / PAM
+  ####################################################################
+  security.pam.services.swaylock = {};
 
   ####################################################################
   ## Gráficos / Gaming
@@ -112,7 +113,6 @@
   boot.binfmt.registrations.appimage = {
     wrapInterpreterInShell = false;
     interpreter = "${pkgs.appimage-run}/bin/appimage-run";
-    recognitionType = "magic";
     offset = 0;
     mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
     magicOrExtension = ''\x7fELF....AI\x02'';
@@ -150,14 +150,14 @@
 
   # Gestor de inicio de sesión con tuigreet configurado a Mango
   services.greetd = {
-  enable = true;
-  settings = {
-    default_session = {
-      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd mango";
-      user = "greeter";
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd mango";
+        user = "greeter";
+      };
     };
   };
-};
 
   ####################################################################
   ## GPU: NVIDIA y Wayland
@@ -218,7 +218,7 @@
     };
   };
   programs.virt-manager.enable = true;
-
+  
   ####################################################################
   ## Usuarios
   ####################################################################
@@ -226,27 +226,28 @@
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "d3rhund";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" "video" "input" ];
   };
 
   ####################################################################
   ## Programas y paquetes del sistema
   ####################################################################
-  programs.firefox.enable = true;
 
   environment.systemPackages = with pkgs; [
     wget
-    thunar-archive-plugin
     file-roller
     wtype
     ghostty
-    foot
     unrar
     unzip
     gzip
     gnutar
     appimage-run
     git
+
+    # Herramientas de sistema con privilegios
+    gparted
+    brightnessctl
   ];
 
   system.stateVersion = "26.05";
