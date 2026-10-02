@@ -33,26 +33,12 @@
     vlc
     fzf
     keepassxc
-    pulseaudio
-    wf-recorder
-    eww
-    dunst
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # Noctalia Shell
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
 
-    # Stack modular para Wayland
-    fuzzel                    # Lanzador de aplicaciones
-    grim                      # Capturas de pantalla
     slurp                     # Selector de áreas
-    wl-clipboard              # Portapapeles
-    sassc
-    cliphist
-    playerctl
-    pamixer  
-    networkmanager
-                   # Control de audio/multimedia
 
     # Herramientas de compilación y librerías
     gcc
@@ -62,16 +48,9 @@
     rustup
     ffmpeg
     jdk21    
-    wayland
-    wayland-protocols
     libGL
     libpng
   ];
-
-  ######################################################################
-  ## Barra de estado modular (Waybar)
-  ######################################################################
-  programs.waybar.enable = true;
 
   ######################################################################
   ## Acciones de Nemo
