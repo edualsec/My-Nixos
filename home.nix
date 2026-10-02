@@ -32,6 +32,7 @@
     jq
     vlc
     fzf
+    rofi
     keepassxc
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
