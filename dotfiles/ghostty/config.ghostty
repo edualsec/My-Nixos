@@ -1,5 +1,0 @@
-font-thicken = true
-custom-shader=shaders/cursor_tail.glsl
-background-opacity = 0.0
-background-blur-radius = 1
-background-blur = true
