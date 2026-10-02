@@ -36,11 +36,14 @@
     pulseaudio
     wf-recorder
     eww
+    dunst
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+    # Noctalia Shell
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # Stack modular para Wayland
     fuzzel                    # Lanzador de aplicaciones
-    swaynotificationcenter    # Centro de notificaciones (SwayNC)
     grim                      # Capturas de pantalla
     slurp                     # Selector de áreas
     wl-clipboard              # Portapapeles

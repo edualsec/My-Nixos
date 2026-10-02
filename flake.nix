@@ -2,10 +2,24 @@
 {
   description = "NixOS con MangoWM";
 
+  # Cache binaria oficial: evita compilar Noctalia (C++) desde cero
+  nixConfig = {
+    extra-substituters = [ "https://noctalia.cachix.org" ];
+    extra-trusted-public-keys = [
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     zen-browser.url = "github:youwen5/zen-browser-flake";
+
+    # Noctalia Shell fijado a v5.0.0-beta.8
+    noctalia = {
+      url = "github:noctalia-dev/noctalia/v5.0.0-beta.8";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # MangoWM
     mangowm = {
