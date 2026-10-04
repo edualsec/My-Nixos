@@ -12,12 +12,17 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     zen-browser.url = "github:youwen5/zen-browser-flake";
 
-    # Noctalia Shell fijado a v5.0.0-beta.8
+    # Spicetify
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Noctalia Shell 
     noctalia = {
-      url = "github:noctalia-dev/noctalia/v5.0.0-beta.8";
+      url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -39,6 +44,7 @@
     nixpkgs,
     home-manager,
     mangowm,
+    spicetify-nix,
     ...
   }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {

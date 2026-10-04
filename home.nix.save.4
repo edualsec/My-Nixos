@@ -1,12 +1,5 @@
 { config, pkgs, inputs, ... }:
-let
-  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-in
 {
-  imports = [
-    inputs.spicetify-nix.homeManagerModules.default
-  ];
-
   home.username = "d3rhund";
   home.homeDirectory = "/home/d3rhund";
   home.stateVersion = "25.05";
@@ -17,6 +10,7 @@ in
   home.packages = with pkgs; [
     fastfetch
     discord
+    spotify
     vscodium
     gh
     cowsay
@@ -26,6 +20,7 @@ in
     cmatrix
     inxi
     cava
+    onlyoffice-desktopeditors
     obsidian
     nemo
     qemu-utils
@@ -33,15 +28,12 @@ in
     libnotify
     sox
     fetch
+    gnome-pomodoro
     jq
     vlc
     fzf
     rofi
-    google-chrome
     keepassxc
-    loupe
-    libreoffice
-    qalculate-gtk
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # Noctalia Shell
@@ -62,16 +54,6 @@ in
   ];
 
   ######################################################################
-  ## Spicetify
-  ######################################################################
-  programs.spicetify = {
-    enable = true;
-    enabledExtensions = with spicePkgs.extensions; [
-      adblock
-    ];
-  };
-
-  ######################################################################
   ## Acciones de Nemo
   ######################################################################
   home.file.".local/share/nemo/actions/vmdk-to-qcow2.nemo_action".text = ''
@@ -90,9 +72,9 @@ in
   ######################################################################
   home.pointerCursor = {
     enable = true;
-    name = "Bibata-Modern-Ice";
-    package = pkgs.bibata-cursors;
-    size = 12;                   
+    name = "Adwaita";
+    package = pkgs.adwaita-icon-theme;
+    size = 6;                   
     gtk.enable = true;            
     x11.enable = true;            
   };
@@ -143,4 +125,5 @@ in
   ## Home Manager
   ######################################################################
   programs.home-manager.enable = true;
+
 }
