@@ -1,4 +1,5 @@
 { config, pkgs, inputs, ... }:
+
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
@@ -9,61 +10,88 @@ in
 
   home.username = "d3rhund";
   home.homeDirectory = "/home/d3rhund";
-  home.stateVersion = "25.05";
-  
-  ######################################################################
-  ## Paquetes personales y utilidades de escritorio
-  ######################################################################
+  home.stateVersion = "26.05";
+
+  # ====================================================================
+  # Variables y Rutas de Entorno
+  # ====================================================================
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
+
+  # ====================================================================
+  # Paquetes de Usuario
+  # ====================================================================
   home.packages = with pkgs; [
-    fastfetch
+    # Entorno y Flakes externos
+    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+    rofi
+    slurp
+    nwg-look
+    libnotify
+    vdirsyncer    
+
+    # Internet, Mensajería y Trabajo
+    google-chrome
     discord
+    keepassxc
+    obsidian
+    onlyoffice-desktopeditors
+    evince
+
+    # Multimedia y Gráficos
+    vlc
+    loupe
+    cava
+    sox
+    ffmpeg
+
+    # Productividad y Terminal
     vscodium
     gh
-    cowsay
     btop
-    starship
-    nwg-look
+    fastfetch
+    fetch
+    fzf
+    jq
+    cowsay
     cmatrix
     inxi
-    cava
-    obsidian
+    qalculate-gtk
+
+    # Gestión de Archivos y Virtualización
     nemo
     qemu-utils
+    virt-viewer
     protontricks
-    libnotify
-    sox
-    fetch
-    jq
-    vlc
-    fzf
-    rofi
-    google-chrome
-    keepassxc
-    loupe
-    libreoffice
-    qalculate-gtk
-    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
-    # Noctalia Shell
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-
-    slurp                     # Selector de áreas
-
-    # Herramientas de compilación y librerías
+    # Desarrollo y Compiladores
     gcc
     gnumake
     pkg-config
     python3
     rustup
-    ffmpeg
-    jdk21    
+    jdk21
     libGL
     libpng
   ];
 
-  ######################################################################
-  ## Spicetify
-  ######################################################################
+  # ====================================================================
+  # Cursor y Apariencia
+  # ====================================================================
+  home.pointerCursor = {
+    enable = true;
+    name = "Bibata-Modern-Ice";
+    package = pkgs.bibata-cursors;
+    size = 12;
+    gtk.enable = true;
+    x11.enable = true;
+  };
+
+  # ====================================================================
+  # Integración Spicetify
+  # ====================================================================
   programs.spicetify = {
     enable = true;
     enabledExtensions = with spicePkgs.extensions; [
@@ -71,51 +99,29 @@ in
     ];
   };
 
-  ######################################################################
-  ## Acciones de Nemo
-  ######################################################################
-  home.file.".local/share/nemo/actions/vmdk-to-qcow2.nemo_action".text = ''
-    [Nemo Action]
-    Name=Convertir a QCOW2
-    Comment=Convierte esta imagen VMDK al formato QCOW2
-    Exec=${pkgs.bash}/bin/bash -c 'for f in %F; do ${pkgs.qemu-utils}/bin/qemu-img convert -f vmdk -O qcow2 "$f" "''${f%.*}.qcow2"; done'
-    Icon-Name=drive-harddisk
-    Selection=any
-    Extensions=vmdk;VMDK;
-    Quote=custom
-  '';
-
-  ######################################################################
-  ## Cursor
-  ######################################################################
-  home.pointerCursor = {
+  # ====================================================================
+  # Starship Prompt
+  # ====================================================================
+  programs.starship = {
     enable = true;
-    name = "Bibata-Modern-Ice";
-    package = pkgs.bibata-cursors;
-    size = 12;                   
-    gtk.enable = true;            
-    x11.enable = true;            
+    enableZshIntegration = true;
   };
 
-  ######################################################################
-  ## Shell
-  ######################################################################
-  home.sessionPath = [
-    "$HOME/.local/bin"
-  ];
-
+  # ====================================================================
+  # Shell (Zsh) y Starship
+  # ====================================================================
   programs.zsh = {
     enable = true;
-
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+  
+ 
 
-    # Configuración de Oh My Zsh y sus plugins
     oh-my-zsh = {
       enable = true;
       theme = "";
-      plugins = [ 
-        "git" 
+      plugins = [
+        "git"
         "sudo"
         "z"
         "extract"
@@ -126,7 +132,6 @@ in
     };
 
     initContent = ''
-      eval "$(starship init zsh)"
       fastfetch
     '';
 
@@ -139,8 +144,20 @@ in
     };
   };
 
-  ######################################################################
-  ## Home Manager
-  ######################################################################
+  # ====================================================================
+  # Acciones de Nemo
+  # ====================================================================
+  home.file.".local/share/nemo/actions/vmdk-to-qcow2.nemo_action".text = ''
+    [Nemo Action]
+    Name=Convertir a QCOW2
+    Comment=Convierte esta imagen VMDK al formato QCOW2
+    Exec=${pkgs.bash}/bin/bash -c 'for f in %F; do ${pkgs.qemu-utils}/bin/qemu-img convert -f vmdk -O qcow2 "$f" "''${f%.*}.qcow2"; done'
+    Icon-Name=drive-harddisk
+    Selection=any
+    Extensions=vmdk;VMDK;
+    Quote=custom
+  '';
+
+  # Gestor de Home Manager
   programs.home-manager.enable = true;
 }
