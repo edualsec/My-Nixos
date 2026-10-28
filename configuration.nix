@@ -37,12 +37,6 @@
     theme = "/etc/nixos/grubtheme";
   };
 
-  fileSystems."/mnt/datos" = {
-    device = "/dev/disk/by-uuid/e4a4f12b-c873-425a-b293-49a3d60d1b2c";
-    fsType = "ext4";
-    options = [ "defaults" "nofail" ];
-  };
-
   services.gvfs.enable = true;
 
   # Soporte AppImage

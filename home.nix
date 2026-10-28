@@ -71,7 +71,6 @@ in
     gnumake
     pkg-config
     python3
-    rustup
     jdk21
     libGL
     libpng
