@@ -37,6 +37,12 @@
     theme = "/etc/nixos/grubtheme";
   };
 
+  fileSystems."/mnt/extra" = {
+  device = "/dev/disk/by-uuid/a1bf2f43-576c-4b7d-acbf-cd9b0c156d91";
+  fsType = "ext4"; # Cambia por exfat, btrfs, etc. según corresponda
+  options = [ "defaults" "nofail" ]; 
+};
+
   services.gvfs.enable = true;
 
   # Soporte AppImage
